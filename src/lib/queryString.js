@@ -6,13 +6,14 @@ const convertKeyValueToString = ([key, value]) => {
   return `${key}=${value}`
 }
 
-module.exports.queryString = (obj) =>
-  Object.entries(obj)
+export function queryString(obj) {
+  return Object.entries(obj)
     .map(convertKeyValueToString)
     .join('&');
+}
 
-module.exports.parse = string =>
-  Object.fromEntries(string.split('&').map(item => {
+export function parse(string) {
+  return Object.fromEntries(string.split('&').map(item => {
     // const parts = item.split('=');
     let [key, value] = item.split('=');
 
@@ -25,6 +26,7 @@ module.exports.parse = string =>
 
     return [key, value];
   }));
+}
 
 /**
  * ? Object.entries()
