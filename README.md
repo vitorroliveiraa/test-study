@@ -1,9 +1,12 @@
-<h1 align="center"> Estudo de Testes </h1> <br>
-![alt text](https://github.com/vitorroliveiraa/test-study/blob/[branch]/image.jpg?raw=true)
-![image](https://user-images.githubusercontent.com/61060367/178156943-9a426bfd-5064-4d71-9421-4bee5ba0fb61.png)
+<h1 align="center">Estudo de Testes </h1>
+<h4 align="center">Status do curso: Em andamento ⏳️</h1>
 
 <p align="center">
-  <a href="https://gitpoint.co/">
-    <img alt="GitPoint" title="GitPoint" src="http://i.imgur.com/VShxJHs.png" width="450">
+  <a href="https://gitpoint.co/](https://javascript.tv.br/">
+    <img alt="tests" title="Acessar site" src="https://github.com/vitorroliveiraa/test-study/blob/master/img/expect.png" style="width: 100%">
   </a>
+</p>
+
+<p align="center" style="margin: 10px">
+  Como dito, o curso abrange sobre testes no ecossistema Javascript. Eu particularmente achei a explicação do Fábio Vedovelli bem didática e tem me auxiliado bastante. Para mais informações, só clicar na imagem.
 </p>
