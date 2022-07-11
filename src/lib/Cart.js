@@ -29,7 +29,7 @@ export default class Cart {
   }
 
   summary() {
-    const total = this.getTotal();
+    const total = this.getTotal().getAmount();;
     const items = this.items;
 
     return {
