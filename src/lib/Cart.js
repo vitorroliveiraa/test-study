@@ -3,14 +3,12 @@ import remove from 'lodash/remove';
 import Money from 'dinero.js';
 
 Money.defaultCurrency = 'BRL';
+Money.globalLocale = 'pt-BR';
 Money.defaultPrecision = 2;
 
-const calculatePercentageDiscount = (amount, item) => {
-  if (
-    item.condition?.percentage &&
-    item.quantity > item.condition.minimum
-  ) {
-    return amount.percentage(item.condition.percentage);
+const calculatePercentageDiscount = (amount, { condition, quantity }) => {
+  if (condition?.percentage && quantity > condition.minimum) {
+    return amount.percentage(condition.percentage);
   }
 
   return Money({ amount: 0 });
@@ -24,6 +22,27 @@ const calculateQuantityDiscount = (amount, item) => {
   }
 
   return Money({ amount: 0 });
+}
+
+const calculateDiscount = (amount, quantity, condition) => {
+  const list = Array.isArray(condition) ? condition : [condition]; // [a] Cria do zero
+
+  const [higherDiscount] = list.map((cond) => {
+
+    if (cond.percentage) {
+      return calculatePercentageDiscount(amount, {
+        condition: cond,
+        quantity,
+      }).getAmount();
+    } else if (cond.quantity) {
+      return calculateQuantityDiscount(amount, {
+        condition: cond,
+        quantity,
+      }).getAmount();
+    }
+  }).sort((a, b) => b - a);
+
+  return Money({ amount: higherDiscount });
 }
 
 export default class Cart {
@@ -44,15 +63,13 @@ export default class Cart {
   }
 
   getTotal() {
-    return this.items.reduce((accumulator, item) => {
-      const amount = Money({ amount: item.quantity * item.product.price })
+    return this.items.reduce((accumulator, { quantity, product, condition }) => {
+      const amount = Money({ amount: quantity * product.price })
 
       let discount = Money({ amount: 0 });
 
-      if (item.condition?.percentage) {
-        discount = calculatePercentageDiscount(amount, item);
-      } else if (item.condition?.quantity) {
-        discount = calculateQuantityDiscount(amount, item);
+      if (condition) {
+        discount = calculateDiscount(amount, quantity, condition);
       }
 
       return accumulator.add(amount).subtract(discount);
@@ -60,11 +77,13 @@ export default class Cart {
   }
 
   summary() {
-    const total = this.getTotal().getAmount();;
+    const total = this.getTotal();
+    const formatted = total.toFormat();
     const items = this.items;
 
     return {
       total,
+      formatted,
       items,
     };
   }
@@ -75,7 +94,7 @@ export default class Cart {
     this.items = [];
 
     return {
-      total,
+      total: total.getAmount(),
       items,
     };
   }
