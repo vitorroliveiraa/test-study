@@ -114,6 +114,7 @@ describe("Cart", () => {
       expect(cart.getTotal().getAmount()).toBeGreaterThan(0);
       expect(cart.summary()).toMatchInlineSnapshot(`
         Object {
+          "formatted": "R$ 3.025,56",
           "items": Array [
             Object {
               "product": Object {
@@ -130,9 +131,27 @@ describe("Cart", () => {
               "quantity": 3,
             },
           ],
-          "total": 302556,
+          "total": Object {
+            "amount": 302556,
+            "currency": "BRL",
+            "precision": 2,
+          },
         }
       `);
+    });
+
+    it("should include formatted amount in the summary", () => {
+      cart.add({
+        product,
+        quantity: 5,
+      });
+
+      cart.add({
+        product: product2,
+        quantity: 3,
+      });
+
+      expect(cart.summary().formatted.replace(/\s+/g, '')).toEqual('R$3.025,56');
     });
 
     it("should reset the cart when checkout() is called", () => {
@@ -147,55 +166,55 @@ describe("Cart", () => {
     });
   });
 
-  describe('Special Conditions', () => {
-    it('should apply percentage discount quantity above minimum is passed', () => {
+  describe("Special Conditions", () => {
+    it("should apply percentage discount quantity above minimum is passed", () => {
       const condition = {
         percentage: 30,
         minimum: 2,
-      }
+      };
 
       cart.add({
         product,
         condition,
         quantity: 3,
-      })
+      });
 
       expect(cart.getTotal().getAmount()).toEqual(74315);
     });
 
-    it('should NOT apply percentage discount quantity is below or equals minimum', () => {
+    it("should NOT apply percentage discount quantity is below or equals minimum", () => {
       const condition = {
         percentage: 30,
         minimum: 2,
-      }
+      };
 
       cart.add({
         product,
         condition,
         quantity: 2,
-      })
+      });
 
       expect(cart.getTotal().getAmount()).toEqual(70776);
     });
 
-    it('should apply quantity discount for even quantities', () => {
+    it("should apply quantity discount for even quantities", () => {
       const condition = {
         quantity: 2,
-      }
+      };
 
       cart.add({
         product,
         condition,
         quantity: 4,
-      })
+      });
 
       expect(cart.getTotal().getAmount()).toEqual(70776);
     });
 
-    it('should NOT apply quantity discount for even quantities when condition is not met', () => {
+    it("should NOT apply quantity discount for even quantities when condition is not met", () => {
       const condition = {
         quantity: 2,
-      }
+      };
 
       cart.add({
         product,
@@ -206,10 +225,10 @@ describe("Cart", () => {
       expect(cart.getTotal().getAmount()).toEqual(35388);
     });
 
-    it('should apply quantity discount for add quantities', () => {
+    it("should apply quantity discount for add quantities", () => {
       const condition = {
         quantity: 2,
-      }
+      };
 
       cart.add({
         product,
@@ -220,15 +239,15 @@ describe("Cart", () => {
       expect(cart.getTotal().getAmount()).toEqual(106164);
     });
 
-    it('should receive two or more conditions and determine/apply the best discount. First case.', () => {
+    it("should receive two or more conditions and determine/apply the best discount. First case.", () => {
       const condition1 = {
         percentage: 30,
         minimum: 2,
-      }
+      };
 
       const condition2 = {
         quantity: 2,
-      }
+      };
 
       cart.add({
         product,
@@ -237,6 +256,25 @@ describe("Cart", () => {
       });
 
       expect(cart.getTotal().getAmount()).toEqual(106164);
+    });
+
+    it("should receive two or more conditions and determine/apply the best discount. Secound case.", () => {
+      const condition1 = {
+        percentage: 80,
+        minimum: 2,
+      };
+
+      const condition2 = {
+        quantity: 2,
+      };
+
+      cart.add({
+        product,
+        condition: [condition1, condition2],
+        quantity: 5,
+      });
+
+      expect(cart.getTotal().getAmount()).toEqual(35388);
     });
   });
 });
