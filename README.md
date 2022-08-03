@@ -1,4 +1,4 @@
-<h1 align="center">Estudo de Testes</h1>
+<h1 align="center">🧪 Estudo de Testes</h1>
 <h4 align="center">Status do curso: Em andamento ⏳️</h1>
 
 <p align="center">
