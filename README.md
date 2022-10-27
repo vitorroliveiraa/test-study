@@ -2,7 +2,7 @@
 <h4 align="center">Status do curso: Em andamento ⏳️</h1>
 
 <p align="center">
-  <a href="https://gitpoint.co/](https://javascript.tv.br/">
+  <a href="https://javascript.tv.br/">
     <img alt="tests" title="Acessar site" src="https://github.com/vitorroliveiraa/test-study/blob/master/img/expect.png" style="width: 100%">
   </a>
 </p>
